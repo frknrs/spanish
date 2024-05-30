@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF8">
+  <title>Learn Spanish</title>
+  <script src="https://unpkg.com/htmx.org"></script>
+</head>
+
+
+<body>
+  <link rel="stylesheet" href="/pages/global.css">
+  <style>
+    .menu {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: center;
+    }
+
+    .menu-selection {
+      border: 1px solid #007bff;
+      margin: 10px;
+      padding: 20px;
+      transition: background-color 0.3s;
+      flex: 1 1 200px;
+    }
+
+    .menu-selection:hover {
+      background-color: #007bff;
+      cursor: pointer;
+    }
+
+    .menu-selection:hover a {
+      color: white;
+    }
+  </style>
+  <div id="content" hx-history-elt>
+    <div class="container">
+      <div class="menu">
+        <div class="menu-selection">
+          <a href="/word-game" hx-get="/word-game" hx-target="#content" hx-boost="true" hx-push-url="true">Word
+            Game</a>
+        </div>
+        <div class="menu-selection">
+          <a href="/manage-word-game" hx-get="/manage-word-game" hx-target="#content" hx-boost="true"
+            hx-push-url="true">Manage</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
