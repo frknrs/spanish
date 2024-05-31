@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF8">
   <title>Sentence Game</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js" defer></script>
   <script src="https://unpkg.com/htmx.org" defer></script>
 </head>
 
@@ -13,11 +14,46 @@
   <style>
   </style>
   <div id="content" hx-history-elt>
-    <div class="container">
-      <div class="current-sentence" hx-get="/get-random-sentence" hx-trigger="load"></div>
-      <div class="options" id="word-options"></div>
-    </div>
+    <h2 id="shuffled-sentence"></h2>
+    <div id="correct-sentence" style="display: none;"></div>
+
+    <form class="user-sentence-form">
+      <input type="text" name="user_sentence" placeholder="order the sentence above">
+      <button type="submit">Check</button>
+    </form>
   </div>
+  <script>
+    let currentSentence;
+
+    async function fetchNewSentence() {
+      const response = await fetch('/get-random-sentence');
+      const data = await response.json();
+      currentSentence = data.correct_sentence;
+      document.getElementById('shuffled-sentence').textContent = data.shuffled_sentence;
+      document.getElementById('correct-sentence').textContent = data.correct_sentence;
+    }
+
+    document.querySelector('.user-sentence-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const userSentence = document.querySelector('input[name="user_sentence"]').value;
+
+      if (userSentence.trim() === currentSentence) {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: {y: 0.6}
+        });
+        setTimeout(() => {
+          fetchNewSentence();
+        }, 1000);
+
+      } else {
+      }
+    });
+
+    fetchNewSentence();
+  </script>
+
 </body>
 
 

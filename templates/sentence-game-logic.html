@@ -1,8 +1,2 @@
 <h2>{{ shuffled_sentence }}</h2>
-<div class="options">
-  {% for word in words %}
-  <div class="selection" data-word="{{ word }}">
-    <p>{{ word }}</p>
-  </div>
-  {% endfor %}
-</div>
+<div id="correct-sentence">{{ correct_sentence|escape }}</div>

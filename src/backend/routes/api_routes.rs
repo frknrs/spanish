@@ -2,7 +2,7 @@ use actix_web::web;
 
 use crate::backend::handlers::api_handlers::{
     sentences_handlers::{
-        get_all_sentences_askama, get_all_sentences_handler, get_random_sentence,
+        check_sentence, get_all_sentences_askama, get_all_sentences_handler, get_random_sentence,
         new_sentence_handler,
     },
     words_handlers::{get_all_words_askama, get_all_words_handler, new_word_handler},
@@ -20,5 +20,6 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
             web::resource("/get-all-sentences-askama")
                 .route(web::get().to(get_all_sentences_askama)),
         )
-        .service(web::resource("/get-random-sentence").route(web::get().to(get_random_sentence)));
+        .service(web::resource("/get-random-sentence").route(web::get().to(get_random_sentence)))
+        .service(web::resource("/check-sentence").route(web::post().to(check_sentence)));
 }

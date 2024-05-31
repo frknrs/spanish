@@ -166,16 +166,6 @@
       });
   };
 
-  const updateTypeOptions = (words) => {
-    const randomTypes = words.map(word => word.tipo).sort(() => 0.5 - Math.random()).slice(0, 3);
-    const typeOptions = [...randomTypes, currentWord.tipo].sort(() => 0.5 - Math.random()).map(type => `
-    <div class="selection" data-type="${type}">
-      <p>${type}</p>
-    </div>
-  `).join('');
-    document.getElementById('type-options').innerHTML = typeOptions;
-  };
-
   const updateTranslateOptions = (words) => {
     const randomTranslations = words.map(word => word.english).sort(() => 0.5 - Math.random()).slice(0, 3);
     const translateOptions = [...randomTranslations, currentWord.english].sort(() => 0.5 - Math.random()).map(translation => `

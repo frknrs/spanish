@@ -20,12 +20,6 @@ pub async fn manage_word_game() -> HttpResponse {
         ))
 }
 
-pub async fn words() -> HttpResponse {
-    HttpResponse::Ok()
-        .content_type("text/html")
-        .body(include_str!("../../../../templates/words.html"))
-}
-
 pub async fn sentence_game() -> HttpResponse {
     HttpResponse::Ok()
         .content_type("text/html")
@@ -44,12 +38,4 @@ pub async fn sentences() -> HttpResponse {
     HttpResponse::Ok()
         .content_type("text/html")
         .body(include_str!("../../../../templates/sentences.html"))
-}
-
-pub async fn sentence_game_logic() -> HttpResponse {
-    HttpResponse::Ok()
-        .content_type("text/html")
-        .body(include_str!(
-            "../../../../templates/sentence-game-logic.html"
-        ))
 }
