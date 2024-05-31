@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF8">
+  <title>Learn Spanish</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js" defer></script>
+  <script src="https://unpkg.com/htmx.org" defer></script>
+</head>
+
+<body>
+  <link rel="stylesheet" href="./styles/global.css">
+  <style>
+    .container {
+      margin-top: 30px;
+    }
+  </style>
+  <div id="content" hx-history-elt>
+    <div class="container">
+      <div class="menu">
+        <div class="menu-group">
+          <div class="menu-selection">
+            <a href="/word-game" hx-get="/word-game" hx-target="#content" hx-boost="true" hx-push-url="true">Word
+            </a>
+          </div>
+          <div class="menu-selection">
+            <a href="/manage-word-game" hx-get="/manage-word-game" hx-target="#content" hx-boost="true"
+              hx-push-url="true">Manage</a>
+          </div>
+        </div>
+        <div class="menu-group">
+          <div class="menu-selection">
+            <a href="/sentence-game" hx-get="/sentence-game" hx-target="#content" hx-boost="true"
+              hx-push-url="true">Sentence</a>
+          </div>
+          <div class="menu-selection">
+            <a href="/manage-sentence-game" hx-get="/manage-sentence-game" hx-target="#content" hx-boost="true"
+              hx-push-url="true">Manage</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,10 +1,14 @@
+pub mod sentences;
 pub mod words;
+
 use log::{error, info};
 use sqlx::{
     sqlite::{SqliteConnectOptions, SqliteJournalMode, SqliteSynchronous},
     Pool, Sqlite, SqlitePool,
 };
 use std::env;
+
+use self::{sentences::create_sentences_tables, words::create_words_tables};
 
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
@@ -31,4 +35,10 @@ pub async fn create_db_connection() -> Result<sqlx::SqlitePool> {
     };
 
     Ok(pool)
+}
+
+pub async fn create_all_tables(pool: &sqlx::SqlitePool) -> Result<()> {
+    create_sentences_tables(pool).await?;
+    create_words_tables(pool).await?;
+    Ok(())
 }

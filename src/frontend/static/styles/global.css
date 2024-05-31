@@ -1,0 +1,119 @@
+body {
+  background-color: #e0e0e0;
+  color: black;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}
+
+a:visited {
+  color: black;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.menu-group {
+  display: flex;
+  flex-direction: row;
+}
+
+.menu-selection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #007bff;
+  margin: 10px;
+  padding: 20px;
+  transition: background-color 0.3s;
+  flex: 1 1 200px;
+  text-align: center;
+}
+
+.menu-selection:hover {
+  background-color: #007bff;
+  cursor: pointer;
+}
+
+.menu-selection:hover a {
+  color: white;
+}
+
+
+h2 {
+  text-align: center;
+}
+
+input[type="text"],
+textarea {
+  background-color: #e0e0e0;
+  border: 1px solid #1c71cc;
+  color: #333333;
+  padding: 10px 5px;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+button[type="submit"] {
+  background-color: #e0e0e0;
+  border: 1px solid #1c71cc;
+  color: #FFFFFF;
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+button[type="submit"] {
+  background-color: #e0e0e0;
+  color: #333333;
+}
+
+button[type="submit"]:hover {
+  background-color: #1c71cc;
+  color: #FFFFFF;
+}
+
+.word-form {
+  padding-top: 16px;
+}
+
+form {
+  font-size: 18px;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+input,
+select,
+button[type="submit"] {
+  font-size: inherit;
+  font-family: inherit;
+}
+
+
+input:focus::placeholder,
+select:focus::placeholder {
+  color: transparent;
+}
+
+::placeholder {
+  text-align: center;
+}

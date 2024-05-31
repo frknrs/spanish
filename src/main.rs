@@ -1,21 +1,16 @@
 pub mod backend {
     pub mod database;
-    pub mod game;
     pub mod handlers;
+    pub mod routes;
 }
 
 use actix_cors::Cors;
 use actix_web::http::header;
-use actix_web::{web, App, HttpResponse, HttpServer};
+use actix_web::{web, App, HttpServer};
 use dotenv::dotenv;
 
-use crate::backend::handlers::api_handlers::words_handlers::{
-    get_all_words_handler, get_random_word_handler,
-};
-use crate::backend::{
-    database::{create_db_connection, words::create_words_tables},
-    handlers::api_handlers::words_handlers::new_word_handler,
-};
+use crate::backend::database::{create_all_tables, create_db_connection};
+use crate::backend::routes::{api_routes, page_routes};
 
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
@@ -28,7 +23,7 @@ async fn main() -> Result<()> {
     dotenv().ok();
     println!("Hello, world!");
     let pool = create_db_connection().await?;
-    create_words_tables(&pool).await?;
+    create_all_tables(&pool).await?;
 
     HttpServer::new(move || {
         App::new()
@@ -45,14 +40,8 @@ async fn main() -> Result<()> {
                     ])
                     .max_age(3600),
             )
-            .service(web::resource("/").to(index))
-            .service(web::resource("/word-game").to(word_game))
-            .service(web::resource("/manage-word-game").to(manage_word_game))
-            .service(web::resource("/new-word").route(web::post().to(new_word_handler)))
-            .service(web::resource("/get-all-words").route(web::get().to(get_all_words_handler)))
-            .service(
-                web::resource("/get-random-word").route(web::get().to(get_random_word_handler)),
-            )
+            .configure(api_routes::configure)
+            .configure(page_routes::configure)
             .service(actix_files::Files::new("/", "src/frontend/static").show_files_listing())
     })
     .bind("127.0.0.1:5000")?
@@ -60,40 +49,4 @@ async fn main() -> Result<()> {
     .await?;
 
     Ok(())
-
-    // HttpServer::new(|| {
-    //     App::new()
-    //         // .configure(handlers::api_handlers::config)
-    //         // .configure(handlers::page_handlers::config)
-    //         .service(web::resource("/").to(index))
-    //         .service(web::resource("/word-game").to(word_game))
-    //         .service(web::resource("/manage-word-game").to(manage_word_game))
-    //         .service(actix_files::Files::new("/", "src/frontend/static").show_files_listing())
-    //         .service(web::resource("/sign_up").route(web::post().to(new_word_handler)))
-    // })
-    // .bind("127.0.0.1:5000")?
-    // .run()
-    // .await?;
-
-    // Ok(())
-}
-
-async fn index() -> HttpResponse {
-    HttpResponse::Ok()
-        .content_type("text/html")
-        .body(include_str!("../src/frontend/static/pages/index.html"))
-}
-
-async fn word_game() -> HttpResponse {
-    HttpResponse::Ok()
-        .content_type("text/html")
-        .body(include_str!("../src/frontend/static/pages/word-game.html"))
-}
-
-async fn manage_word_game() -> HttpResponse {
-    HttpResponse::Ok()
-        .content_type("text/html")
-        .body(include_str!(
-            "../src/frontend/static/pages/manage-word-game.html"
-        ))
 }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF8">
+  <title>Sentence Game</title>
+  <script src="https://unpkg.com/htmx.org" defer></script>
+</head>
+
+<body>
+  <link rel="stylesheet" href="./styles/global.css">
+
+  <style>
+  </style>
+  <div id="content" hx-history-elt>
+    <div class="container">
+      <div class="current-sentence" hx-get="/get-random-sentence" hx-trigger="load"></div>
+      <div class="options" id="word-options"></div>
+    </div>
+  </div>
+</body>
+
+
+<script>
+
+</script>
+
+</html>

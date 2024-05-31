@@ -1,10 +1,9 @@
 use actix_web::{web, HttpResponse};
+use askama::Template;
 use log::info;
 use serde::Deserialize;
-use sqlx::SqlitePool;
 
 use crate::backend::database::words::Word;
-use crate::backend::game::word_game::get_random_word;
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
@@ -39,6 +38,15 @@ pub async fn get_all_words_handler(pool: web::Data<sqlx::SqlitePool>) -> Result<
     Ok(HttpResponse::Ok().json(words))
 }
 
-pub async fn get_random_word_handler(pool: web::Data<SqlitePool>) -> Result<HttpResponse> {
-    get_random_word(pool).await
+#[derive(Template)]
+#[template(path = "words.html")]
+struct WordsTemplate {
+    words: Vec<Word>,
+}
+
+pub async fn get_all_words_askama(pool: web::Data<sqlx::SqlitePool>) -> Result<HttpResponse> {
+    let words = Word::get_all_words(&pool).await?;
+    let template = WordsTemplate { words };
+    let rendered = template.render().unwrap();
+    Ok(HttpResponse::Ok().content_type("text/html").body(rendered))
 }

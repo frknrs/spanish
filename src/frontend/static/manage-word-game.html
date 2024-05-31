@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF8">
+  <title>Manage Word Game</title>
+  <script src="https://unpkg.com/htmx.org" defer></script>
+  <style>
+    h2 {
+      border-bottom: 1px solid #007bff;
+      padding-bottom: 20px;
+    }
+  </style>
+</head>
+
+
+<body>
+  <link rel="stylesheet" href="./styles/global.css">
+  <div id="content" hx-history-elt>
+    <div class="container">
+      <div class="new-word">
+        <h2>Add New Word</h2>
+        <form class="word-form" hx-swap="none" hx-post="/new-word">
+          <input type="text" name="spanish" placeholder="spanish">
+          <input type="text" name="tipo" placeholder="type">
+          <input type="text" name="english" placeholder="english">
+          <button type="submit">Save Word</button>
+        </form>
+        <script>
+          document.querySelector('form').addEventListener('htmx:afterRequest', function (evt) {
+            console.info('Word created successfully');
+          });
+        </script>
+      </div>
+      <div id="words-list" hx-get="/get-all-words-askama" hx-trigger="load">
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

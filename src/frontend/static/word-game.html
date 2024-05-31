@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF8">
+  <title>Word Game</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js" defer></script>
+  <script src="https://unpkg.com/htmx.org" defer></script>
+</head>
+
+<body>
+  <link rel="stylesheet" href="./styles/global.css">
+
+  <style>
+    h2 {
+      text-align: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #007bff;
+      margin: 0;
+      padding-top: 50px;
+
+    }
+
+    .options {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #007bff;
+
+    }
+
+    .selection {
+      border: 1px solid #007bff;
+      margin: 10px;
+      padding: 10px;
+      transition: background-color 0.3s;
+      width: 150px;
+      max-width: 100%;
+      text-align: center;
+    }
+
+    .selection:hover {
+      background-color: #007bff;
+      cursor: pointer;
+      color: white;
+    }
+
+    .selection:hover a {
+      color: white;
+    }
+
+    .correct {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .wrong {
+      background-color: #a07e7c;
+      color: white;
+    }
+  </style>
+  <div id="content" hx-history-elt>
+    <div class="container">
+      <div class="current-spanish-word">
+        <h2 id="spanish-word"></h2>
+      </div>
+      <div class="type-section">
+        <div class="options" id="type-options"></div>
+      </div>
+      <div class="translate-section">
+        <div class="options" id="translate-options"></div>
+      </div>
+    </div>
+  </div>
+</body>
+
+
+<script>
+  let currentWord;
+  let correctCount = 0;
+
+  fetch('/get-all-words')
+    .then(response => response.json())
+    .then(words => {
+      const randomWord = words[Math.floor(Math.random() * words.length)];
+      currentWord = randomWord;
+      document.getElementById('spanish-word').textContent = randomWord.spanish;
+
+      const randomTypes = words.map(word => word.tipo).sort(() => 0.5 - Math.random()).slice(0, 3);
+      const typeOptions = [...randomTypes, randomWord.tipo].sort(() => 0.5 - Math.random()).map(type => `
+        <div class="selection" data-type="${type}">
+          <p>${type}</p>
+        </div>
+      `).join('');
+      document.getElementById('type-options').innerHTML = typeOptions;
+
+      const randomTranslations = words.map(word => word.english).sort(() => 0.5 - Math.random()).slice(0, 3);
+      const translateOptions = [...randomTranslations, randomWord.english].sort(() => 0.5 - Math.random()).map(translation => `
+        <div class="selection" data-translation="${translation}">
+          <p>${translation}</p>
+        </div>
+      `).join('');
+      document.getElementById('translate-options').innerHTML = translateOptions;
+    });
+
+  document.getElementById('type-options').addEventListener('click', (event) => {
+    if (event.target.closest('.selection')) {
+      const selectedType = event.target.closest('.selection').dataset.type;
+      checkType(selectedType);
+    }
+  });
+
+  document.getElementById('translate-options').addEventListener('click', (event) => {
+    if (event.target.closest('.selection')) {
+      const selectedTranslation = event.target.closest('.selection').dataset.translation;
+      checkEnglish(selectedTranslation);
+    }
+  });
+
+  const checkType = (selectedType) => {
+    if (selectedType === currentWord.tipo) {
+      correctCount++;
+      event.target.closest('.selection').classList.add('correct');
+    } else {
+      event.target.closest('.selection').classList.add('wrong');
+    }
+    checkGameCompletion();
+  };
+
+  const checkEnglish = (selectedTranslation) => {
+    if (selectedTranslation === currentWord.english) {
+      correctCount++;
+      event.target.closest('.selection').classList.add('correct');
+    } else {
+      event.target.closest('.selection').classList.add('wrong');
+    }
+    checkGameCompletion();
+  };
+
+  const checkGameCompletion = () => {
+    if (correctCount === 2) {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: {y: 0.6}
+      });
+      setTimeout(() => {
+        resetStyles();
+        fetchNewWord();
+        correctCount = 0;
+      }, 1000);
+    }
+  };
+
+  const fetchNewWord = () => {
+    fetch('/get-all-words')
+      .then(response => response.json())
+      .then(words => {
+        const randomWord = words[Math.floor(Math.random() * words.length)];
+        currentWord = randomWord;
+        document.getElementById('spanish-word').textContent = randomWord.spanish;
+        updateTypeOptions(words);
+        updateTranslateOptions(words);
+      });
+  };
+
+  const updateTypeOptions = (words) => {
+    const randomTypes = words.map(word => word.tipo).sort(() => 0.5 - Math.random()).slice(0, 3);
+    const typeOptions = [...randomTypes, currentWord.tipo].sort(() => 0.5 - Math.random()).map(type => `
+    <div class="selection" data-type="${type}">
+      <p>${type}</p>
+    </div>
+  `).join('');
+    document.getElementById('type-options').innerHTML = typeOptions;
+  };
+
+  const updateTranslateOptions = (words) => {
+    const randomTranslations = words.map(word => word.english).sort(() => 0.5 - Math.random()).slice(0, 3);
+    const translateOptions = [...randomTranslations, currentWord.english].sort(() => 0.5 - Math.random()).map(translation => `
+    <div class="selection" data-translation="${translation}">
+      <p>${translation}</p>
+    </div>
+  `).join('');
+    document.getElementById('translate-options').innerHTML = translateOptions;
+  };
+
+  const resetStyles = () => {
+    document.querySelectorAll('.selection').forEach(selection => {
+      selection.classList.remove('correct', 'wrong');
+    });
+  };
+
+</script>
+
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF8">
+  <title>Manage Sentence Game</title>
+  <script src="https://unpkg.com/htmx.org" defer></script>
+  <style>
+    h2 {
+      border-bottom: 1px solid #007bff;
+      padding-bottom: 20px;
+    }
+  </style>
+</head>
+
+
+<body>
+  <link rel="stylesheet" href="./styles/global.css">
+  <div id="content" hx-history-elt>
+    <div class="container">
+      <div class="new-sentence">
+        <h2>Add New Word</h2>
+        <form class="sentence-form" hx-swap="none" hx-post="/new-sentence">
+          <input type="text" name="sentence" placeholder="sentence">
+          <button type="submit">Save Sentence</button>
+        </form>
+        <script>
+          document.querySelector('form').addEventListener('htmx:afterRequest', function (evt) {
+            console.info('Word created successfully');
+          });
+        </script>
+      </div>
+      <div id="sentences-list" hx-get="/get-all-sentences-askama" hx-trigger="load">
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

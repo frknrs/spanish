@@ -5,7 +5,6 @@ use serde::Serialize;
 #[allow(dead_code)]
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
-#[allow(dead_code)]
 #[derive(Serialize, Clone)]
 pub struct Word {
     pub spanish: String,
@@ -45,13 +44,13 @@ impl Word {
     pub async fn insert_word(self, pool: &sqlx::SqlitePool) -> Result<()> {
         let mut conn = pool.acquire().await.map_err(|err| {
             error!(
-                "Failed to acquire connection while creating the tables: {}",
+                "Failed to acquire connection while inserting the word: {}",
                 err
             );
             Box::new(err) as Box<dyn std::error::Error>
         })?;
 
-        info!("Connected to the database for inserting the ad");
+        info!("Connected to the database for inserting the word");
 
         sqlx::query!(
             "INSERT INTO words (spanish, tipo, english) VALUES (?, ?, ?)",
@@ -62,11 +61,11 @@ impl Word {
         .execute(&mut *conn)
         .await
         .map_err(|err| {
-            error!("Failed to insert ad to the database: {}", err);
+            error!("Failed to insert word to the database: {}", err);
             Box::new(err) as Box<dyn std::error::Error>
         })?;
 
-        info!("Succesfully inserted the ad to the database");
+        info!("Succesfully inserted the word to the database");
 
         Ok(())
     }

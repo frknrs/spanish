@@ -17,4 +17,5 @@ serde = "1.0.203"
 serde_json = "1.0.117"
 actix-cors = "0.7.0"
 rand = "0.8.5"
+askama = "0.12.1"
 
